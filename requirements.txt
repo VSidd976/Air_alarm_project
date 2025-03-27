@@ -1,0 +1,7 @@
+argparse
+apscheduler
+pandas
+requests
+telethon
+aiohttp
+python-dotenv
