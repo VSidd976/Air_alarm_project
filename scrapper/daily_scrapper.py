@@ -9,9 +9,9 @@ import os
 
 # changamle parameters
 OUTPUT_FILE = "isw_data.txt"
-START_DATE = datetime.datetime(2025, 3, 23)
-CRON_HOUR = 21
-CRON_MINUTE = 38
+START_DATE = datetime.datetime(2025, 3, 26)
+CRON_HOUR = 6
+CRON_MINUTE = 0
 
 MONTH_NAMES = {
     1: "january", 2: "february", 3: "march", 4: "april", 5: "may", 6: "june",
@@ -49,7 +49,7 @@ def extract_text(html):
 def save_to_file(text, url, filename):
     # Check if the file exists, if not create it
     if not os.path.exists(filename):
-        with open(filename, "w", encoding="utf-8") as file:
+        with open(filename, "a", encoding="utf-8") as file:
             file.write("isw_data\n\n")
 
     # Path to the output file
@@ -94,7 +94,7 @@ def crawl_daily():
 
 
 if not os.path.exists(OUTPUT_FILE):
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as file:
+    with open(OUTPUT_FILE, "a", encoding="utf-8") as file:
         file.write("ISW Crawler Data\n\n")
     print(f"Created new file: {OUTPUT_FILE}")
 
