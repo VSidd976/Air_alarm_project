@@ -60,6 +60,40 @@ target_words = [
     "победа на всех фронтах", "приказ президента", "черная пропаганда", "государственная безопасность"
 ]
 
+stop_words = [
+    "і", "та", "й", "а", "але", "або", "бо", "щоб", "що", "як", "коли", "де", "куди", "звідки", "якщо", "хоч", "хоча",
+    "чи", "ніби", "наче", "неначе", "немов",
+    "в", "у", "з", "із", "до", "на", "при", "перед", "над", "під", "за", "через", "між", "про", "для", "без", "після",
+    "біля", "коло",
+    "я", "ти", "він", "вона", "воно", "ми", "ви", "вони", "мене", "мені", "мною", "тебе", "тобі", "тобою", "його", "її",
+    "нас", "нам", "нами", "вас", "вам", "вами", "їх", "їм", "ними", "собі", "себе", "собою",
+    "цей", "ця", "це", "ці", "той", "та", "те", "ті", "який", "яка", "яке", "які",
+    "був", "була", "було", "були", "бути", "є", "буде", "будемо", "будеш", "будете", "бувши",
+    "не", "вже", "ще", "лише", "тільки", "саме", "навіть", "також", "от", "ось", "он", "ну", "ж", "би", "б", "хай",
+    "нехай", "аби", "хоч", "мов",
+    "так", "ні", "може", "мабуть", "звісно", "очевидно", "щось", "хтось", "будь-хто", "дещо", "ніхто", "ніщо",
+    "підписатись", "від", "газета"
+
+
+                          "и", "а", "но", "или", "чтобы", "что", "как", "когда", "где", "куда", "откуда", "если",
+    "хотя", "хоть", "либо", "будто", "словно", "так", "так как",
+    "в", "на", "по", "под", "над", "из", "у", "от", "при", "между", "через", "без", "после", "перед", "около", "для",
+    "про", "об", "обо",
+    "я", "ты", "он", "она", "оно", "мы", "вы", "они", "меня", "мне", "мной", "тебя", "тебе", "тобой", "его", "её",
+    "нас", "нам", "нами", "вас", "вам", "вами", "их", "им", "ими", "себя", "себе", "собой",
+    "этот", "эта", "это", "эти", "тот", "та", "то", "те", "который", "которая", "которое", "которые",
+    "был", "была", "было", "были", "быть", "есть", "будет", "будем", "будешь", "будете", "будучи",
+    "не", "уже", "ещё", "лишь", "только", "именно", "даже", "также", "вот", "вон", "ну", "же", "бы", "пусть", "пускай",
+    "давай", "мол",
+    "да", "нет", "может", "наверное", "конечно", "возможно", "кто-то", "что-то", "кое-что", "никто", "ничто",
+    "подписаться", "александр", "алексей", "андрей", "ваш", "видео", "включая", "вместе", "вновь", "год", "дневник",
+    "друг", "ее", "ему", "ес", "ещ", "закрыть", "изза", "иметь", "имя", "интервью", "которого", "которой", "которую",
+    "которых", "однако", "парень", "подписчик", "пожар", "пока", "показать", "потому", "почему", "поэтому", "почти",
+    "правда", "проект", "сайт", "сам", "сами", "самом", "сеть",
+
+    "the", "upd"
+]
+
 nlp_uk = spacy.load("uk_core_news_sm")
 nlp_ru = spacy.load("ru_core_news_sm")
 
@@ -72,6 +106,7 @@ def clean_text(text):
     text = emoji.replace_emoji(text, replace="")
     text = text.lower()
     text = re.sub(r'\s+', ' ', text).strip()
+    text = re.sub(r'\\d+', '', text)
 
     return text
 
@@ -91,16 +126,26 @@ def lematize_text(text, language):
     return [' '.join(token.lemma_ for token in doc if token.is_alpha) for doc in docs]
 
 
+def clean_stopwords(text):
+    words = text.split()
+    filtered_words = [word for word in words if word.lower() not in stop_words]
+    return ' '.join(filtered_words)
+
+
 def parse_channel(csv_file):
     df = pd.read_csv(csv_file)
     df = df.dropna(subset=['message'])
     df = df.drop(columns=[
+        'id',
+        'message_id',
+        'sender_id',
         'first_name',
         'last_name',
         'username',
         'media_path',
         'reply_to',
-        'media_type'])
+        'media_type'
+    ])
     df.date = pd.to_datetime(df.date)
     df.loc[:, 'date'] = df['date'] - pd.Timedelta(hours=10)
     df = df[df['date'] >= '2022-02-24 00:00:00']
@@ -111,12 +156,14 @@ def parse_channel(csv_file):
     df['important'] = df['message'].apply(lambda x: contains_keywords(x, target_words))
     df = df[df['important'] != False]
     df = df.drop(columns='important')
+    df['message'] = df['message'].apply(clean_stopwords)
     return df
 
 
 def main():
     # paste your path to your telegram data
-    data_path = r""
+    data_path = r"C:\Users\admin\PycharmProjects\Air_alarm_project\telegram_data"
+    first = True
     print("\nTelegram data parsing began")
 
     for i in Path(data_path).iterdir():
@@ -130,10 +177,11 @@ def main():
 
         print(f"\nChannel {i.name} is parsing")
         df = parse_channel(csv_file)
-        df.to_csv("telegram_data.csv", mode='a', header=False, index=False)
+        df.to_csv("telegram_data.csv", mode='a', header=first, index=False)
+        first = False
         print(f"Channel {i.name} parsing has ended")
 
-    merged_df = pd.read_csv("../../telegram_data.csv")
+    merged_df = pd.read_csv("telegram_data.csv")
     merged_df = merged_df.sort_values(by='date').reset_index(drop=True)
     merged_df.to_csv('telegram_data.csv', index = False)
     print("\nTelegram data parsing has ended")
