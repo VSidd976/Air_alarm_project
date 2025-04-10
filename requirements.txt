@@ -5,3 +5,10 @@ requests
 telethon
 aiohttp
 python-dotenv
+numpy==1.23.5
+matplotlib
+seaborn
+scikit-learn
+gensim
+nltk
+tqdm
