@@ -42,6 +42,7 @@ def find_avg_vectors(tg_df, target_df):
 def main():
     tg_data_path = input("Paste your path to telegram data: ")
     df_tg = pd.read_csv(tg_data_path, delimiter=",", low_memory=False)
+    df_tg['date'] = pd.to_datetime(df_tg['date'])
 
     tg_vectoriser(df_tg)
     df_tg.to_csv(tg_data_path, index=False)
@@ -51,7 +52,7 @@ def main():
 
     print("\nTelegram data preparation for merge began")
     df['datetime'] = pd.to_datetime(df['datetime'])
-    df_tg['date'] = pd.to_datetime(df_tg['date'])
+
     df_tg['text_vector'] = df_tg['text_vector'].astype(np.float64)
     avg_df_tg = find_avg_vectors(df_tg, df)
     print("Telegram data preparation for merge ended")
