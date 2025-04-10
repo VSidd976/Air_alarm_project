@@ -7,8 +7,10 @@ def tg_vectoriser(tg_df):
     print("\nTelegram data vectorising began")
     vectorizer = TfidfVectorizer(max_features=1000)
     X_tfidf = vectorizer.fit_transform(tg_df['message'])
+
     message_vectors = X_tfidf.mean(axis=1)
     message_vectors_df = pd.DataFrame(message_vectors, columns=[f'feat_{i}' for i in range(message_vectors.shape[1])])
+
     tg_df['text_vector'] = message_vectors_df.astype('float64').values
     print("Telegram data vectorising ended")
 

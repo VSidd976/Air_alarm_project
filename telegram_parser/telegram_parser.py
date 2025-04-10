@@ -106,7 +106,7 @@ def clean_text(text):
     text = emoji.replace_emoji(text, replace="")
     text = text.lower()
     text = re.sub(r'\s+', ' ', text).strip()
-    text = re.sub(r'\\d+', '', text)
+    text = re.sub(r'\d+', '', text)
 
     return text
 
