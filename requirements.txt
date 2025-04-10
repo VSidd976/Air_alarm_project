@@ -12,3 +12,6 @@ scikit-learn
 gensim
 nltk
 tqdm
+emoji
+spacy
+langdetect
