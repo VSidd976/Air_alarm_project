@@ -5,7 +5,7 @@ requests
 telethon
 aiohttp
 python-dotenv
-numpy==1.23.5
+numpy
 matplotlib
 seaborn
 scikit-learn
