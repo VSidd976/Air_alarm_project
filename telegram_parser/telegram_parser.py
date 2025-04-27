@@ -161,8 +161,8 @@ def parse_channel(csv_file):
 
 
 def main():
-    # paste your path to your telegram data
-    data_path = r"C:\Users\admin\PycharmProjects\Air_alarm_project\telegram_data"
+    current_dir = Path(__file__).parent
+    data_path = current_dir.parent / 'telegram-scraper'
     first = True
     print("\nTelegram data parsing began")
 

@@ -149,7 +149,7 @@ def parse_channel(data_frame):
 
 
 def main():
-    data_path = 'daily_telegram_data.csv'
+    data_path = 'hour_telegram_data.csv'
     df = pd.read_csv(data_path)
     print("\nTelegram data parsing began")
 

@@ -1,16 +1,16 @@
 import os
 import json
-import csv
 import asyncio
 from telethon import TelegramClient
-from telethon.tl.types import User, PeerChannel
-from telethon.errors import FloodWaitError, RPCError
-import aiohttp
+from telethon.tl.types import PeerChannel
 import sys
 import pandas as pd
+from pathlib import Path
 
 
-STATE_FILE = 'state.json'
+current_dir = Path(__file__).parent
+STATE_FILE = current_dir.parent / 'telegram-scraper' / 'state.json'
+session_database = current_dir.parent / 'telegram-scraper' / 'session.session'
 
 
 def save_state(state):
@@ -32,7 +32,7 @@ def load_state():
 
 
 state = load_state()
-client = TelegramClient('session', state['api_id'], state['api_hash'])
+client = TelegramClient(session_database, state['api_id'], state['api_hash'])
 
 
 async def scrape_channel(client, channel, offset_id, df, state):
@@ -43,7 +43,6 @@ async def scrape_channel(client, channel, offset_id, df, state):
             entity = await client.get_entity(channel)
 
         total_messages = 0
-        processed_messages = 0
 
         async for message in client.iter_messages(entity, offset_id=offset_id, reverse=True):
             total_messages += 1
@@ -52,7 +51,6 @@ async def scrape_channel(client, channel, offset_id, df, state):
             print(f"No messages found in channel {channel}.")
             return df
 
-        last_message_id = None
         processed_messages = 0
 
         async for message in client.iter_messages(entity, offset_id=offset_id, reverse=True):
