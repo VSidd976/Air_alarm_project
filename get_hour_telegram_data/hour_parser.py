@@ -2,7 +2,6 @@ import pandas as pd
 import re
 import emoji
 import spacy
-from pathlib import Path
 from langdetect import detect
 
 target_words = [
@@ -132,20 +131,9 @@ def clean_stopwords(text):
     return ' '.join(filtered_words)
 
 
-def parse_channel(csv_file):
-    df = pd.read_csv(csv_file)
+def parse_channel(data_frame):
+    df = data_frame
     df = df.dropna(subset=['message'])
-    df = df.drop(columns=[
-        'id',
-        'message_id',
-        'sender_id',
-        'first_name',
-        'last_name',
-        'username',
-        'media_path',
-        'reply_to',
-        'media_type'
-    ])
     df.date = pd.to_datetime(df.date)
     df.loc[:, 'date'] = df['date'] - pd.Timedelta(hours=10)
     df = df[df['date'] >= '2022-02-24 00:00:00']
@@ -161,29 +149,15 @@ def parse_channel(csv_file):
 
 
 def main():
-    current_dir = Path(__file__).parent
-    data_path = current_dir.parent / 'telegram-scraper'
-    first = True
+    data_path = 'hour_telegram_data.csv'
+    df = pd.read_csv(data_path)
     print("\nTelegram data parsing began")
 
-    for i in Path(data_path).iterdir():
-        if not i.is_dir():
-            continue
+    if len(df) != 0:
+        df = parse_channel(df)
+        df = df.sort_values(by='date').reset_index(drop=True)
 
-        try:
-            csv_file = next(i.rglob('*.csv'))
-        except StopIteration:
-            continue
-
-        print(f"\nChannel {i.name} is parsing")
-        df = parse_channel(csv_file)
-        df.to_csv("telegram_data.csv", mode='a', header=first, index=False)
-        first = False
-        print(f"Channel {i.name} parsing has ended")
-
-    merged_df = pd.read_csv("telegram_data.csv")
-    merged_df = merged_df.sort_values(by='date').reset_index(drop=True)
-    merged_df.to_csv('telegram_data.csv', index = False)
+    df.to_csv('hour_parsed_telegram_data.csv', index = False)
     print("\nTelegram data parsing has ended")
 
 
