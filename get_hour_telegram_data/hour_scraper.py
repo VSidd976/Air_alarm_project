@@ -83,13 +83,13 @@ async def main():
     try:
         await client.start()
         df = pd.DataFrame(columns=['date', 'message'])
-        print("Hourly scraping began")
+        print("Hour scraping began")
         for channel in state['channels']:
             df = await scrape_channel(client,channel, state['channels'][channel], df, state)
         df.to_csv('hour_telegram_data.csv', index=False)
     finally:
         await client.disconnect()
-        print("Hourly scraping ended")
+        print("Hour scraping ended")
 
 
 if __name__ == '__main__':

@@ -31,7 +31,7 @@ def find_avg_vectors(tg_df, target_df):
 
             avg_vector = np.mean(vectors, axis=0)
         else:
-            avg_vector = 0
+            avg_vector = np.nan
 
         average_vectors.append({'datetime': datetime, 'telegram_vector': avg_vector})
 
@@ -40,12 +40,12 @@ def find_avg_vectors(tg_df, target_df):
 
 
 def main():
-    telegram_data_path = input("Paste your path to telegram data: ")
-    df_tg = pd.read_csv(telegram_data_path, delimiter=",", low_memory=False)
+    tg_data_path = input("Paste your path to telegram data: ")
+    df_tg = pd.read_csv(tg_data_path, delimiter=",", low_memory=False)
     df_tg['date'] = pd.to_datetime(df_tg['date'])
 
     tg_vectoriser(df_tg)
-    df_tg.to_csv(telegram_data_path, index=False)
+    df_tg.to_csv('vectorised_telegram_data.csv', index=False)
 
     main_data_path = input("Paste your path to main data: ")
     df = pd.read_csv(main_data_path, delimiter=",")

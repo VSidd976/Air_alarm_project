@@ -149,7 +149,7 @@ def parse_channel(data_frame):
 
 
 def main():
-    data_path = 'hour_telegram_data.csv'
+    data_path = 'daily_telegram_data.csv'
     df = pd.read_csv(data_path)
     print("\nTelegram data parsing began")
 
@@ -157,7 +157,7 @@ def main():
         df = parse_channel(df)
         df = df.sort_values(by='date').reset_index(drop=True)
 
-    df.to_csv('parsed_telegram_data.csv', index = False)
+    df.to_csv('hour_parsed_telegram_data.csv', index = False)
     print("\nTelegram data parsing has ended")
 
 
