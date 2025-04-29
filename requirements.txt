@@ -15,3 +15,4 @@ tqdm
 emoji
 spacy
 langdetect
+catboost
