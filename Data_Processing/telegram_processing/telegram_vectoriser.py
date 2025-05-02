@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from joblib import dump
+from pathlib import Path
 
 
 def tg_vectoriser(tg_df):

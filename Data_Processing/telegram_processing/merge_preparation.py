@@ -38,7 +38,7 @@ def main():
     df_tg['text_vector'] = df_tg['text_vector'].astype(np.float64)
     avg_df_tg = find_avg_vectors(df_tg, df)
     print("Telegram data preparation for merge ended")
-    avg_df_tg.to_csv("average_tg_vectors.csv", index=False)
+    avg_df_tg.to_csv("average_telegram_vectors.csv", index=False)
 
 
 if __name__ == '__main__':
