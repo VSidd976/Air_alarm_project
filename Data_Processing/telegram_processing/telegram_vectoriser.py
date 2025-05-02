@@ -44,9 +44,7 @@ def find_avg_vectors(tg_df, target_df):
 
 
 def main():
-    current_dir = Path(__file__).parent
-    tg_data_path = current_dir.parent / 'telegram_parser' / 'parsed_telegram_data.csv'
-    df_tg = pd.read_csv(tg_data_path, delimiter=",", low_memory=False)
+    df_tg = pd.read_csv('parsed_telegram_data.csv', delimiter=",", low_memory=False)
     df_tg['date'] = pd.to_datetime(df_tg['date'])
 
     tg_vectoriser(df_tg)

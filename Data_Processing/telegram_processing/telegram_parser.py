@@ -162,7 +162,7 @@ def parse_channel(csv_file):
 
 def main():
     current_dir = Path(__file__).parent
-    data_path = current_dir.parent / 'telegram-scraper'
+    data_path = current_dir.parent.parent / 'Data_Collection' / 'telegram-scraper'
     first = True
     print("\nTelegram data parsing began")
 
