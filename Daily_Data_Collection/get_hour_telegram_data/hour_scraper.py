@@ -9,8 +9,8 @@ from pathlib import Path
 
 
 current_dir = Path(__file__).parent
-STATE_FILE = current_dir.parent / 'telegram-scraper' / 'state.json'
-session_database = current_dir.parent / 'telegram-scraper' / 'session.session'
+STATE_FILE = current_dir.parent.parent / 'Data_Collection' / 'telegram-scraper' / 'state.json'
+session_database = current_dir.parent.parent / 'Data_Collection' / 'telegram-scraper' / 'session.session'
 
 
 def save_state(state):

@@ -1,22 +1,7 @@
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from joblib import load
 from datetime import datetime
-
-
-def tg_vectoriser(tg_df):
-    print("\nTelegram data vectorising began")
-    current_dir = Path(__file__).parent
-    tfidf_path = current_dir.parent / 'telegram_vectoriser' / 'telegram_tfidf.pkl'
-    vectoriser = load(tfidf_path)
-
-    X_tfidf = vectoriser.fit_transform(tg_df['message'])
-    message_vectors = X_tfidf.mean(axis=1)
-    message_vectors_df = pd.DataFrame(message_vectors, columns=[f'feat_{i}' for i in range(message_vectors.shape[1])])
-
-    tg_df['text_vector'] = message_vectors_df.astype('float64').values
-    print("Telegram data vectorising ended")
 
 
 def find_avg_vectors(tg_df, main_df):
@@ -46,12 +31,20 @@ def find_avg_vectors(tg_df, main_df):
 
 
 def main():
-    df_tg = pd.read_csv('hour_parsed_telegram_data.csv', delimiter=",", low_memory=False)
-    df_tg['date'] = pd.to_datetime(df_tg['date'])
+    current_dir = Path(__file__).parent
+    hour_vectors_data_path = 'hour_vectorised_telegram_data.csv'
+    main_vectors_data_path = current_dir.parent.parent / 'Data_Processing' / 'telegram_vectoriser' / 'vectorised_telegram_data.csv'
+    df_tg = pd.read_csv(hour_vectors_data_path, delimiter=',')
+    df = pd.read_csv(main_vectors_data_path, delimiter=",")
 
-    tg_vectoriser(df_tg)
-    df_tg = df_tg.drop(columns='message')
-    df_tg.to_csv('hour_vectorised_telegram_data.csv', index=False)
+    print("\nTelegram data preparation for merge began")
+    df['date'] = pd.to_datetime(df['date'])
+    df_tg['text_vector'] = df_tg['text_vector'].astype(np.float64)
+    avg_df_tg = find_avg_vectors(df_tg, df)
+    print("Telegram data preparation for merge ended")
+    avg_df_tg.to_csv("average_telegram_vectors.csv", index=False)
+    df = pd.concat([df, df_tg], ignore_index=True)
+    df.to_csv(main_vectors_data_path, index=False)
 
 
 if __name__ == '__main__':

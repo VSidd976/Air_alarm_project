@@ -134,7 +134,7 @@ def clean_stopwords(text):
 def parse_channel(data_frame):
     df = data_frame
     df = df.dropna(subset=['message'])
-    df.date = pd.to_datetime(df.date)
+    df.loc[:, 'date'] = pd.to_datetime(df['date'])
     df.loc[:, 'date'] = df['date'] - pd.Timedelta(hours=10)
     df = df[df['date'] >= '2022-02-24 00:00:00']
     df['message'] = df['message'].apply(clean_text)
@@ -149,8 +149,7 @@ def parse_channel(data_frame):
 
 
 def main():
-    data_path = 'hour_telegram_data.csv'
-    df = pd.read_csv(data_path)
+    df = pd.read_csv('hour_telegram_data.csv')
     print("\nTelegram data parsing began")
 
     if len(df) != 0:

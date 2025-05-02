@@ -146,7 +146,7 @@ def parse_channel(csv_file):
         'reply_to',
         'media_type'
     ])
-    df.date = pd.to_datetime(df.date)
+    df.loc[:, 'date'] = pd.to_datetime(df['date'])
     df.loc[:, 'date'] = df['date'] - pd.Timedelta(hours=10)
     df = df[df['date'] >= '2022-02-24 00:00:00']
     df['message'] = df['message'].apply(clean_text)
@@ -177,13 +177,13 @@ def main():
 
         print(f"\nChannel {i.name} is parsing")
         df = parse_channel(csv_file)
-        df.to_csv("telegram_data.csv", mode='a', header=first, index=False)
+        df.to_csv("parsed_telegram_data.csv", mode='a', header=first, index=False)
         first = False
         print(f"Channel {i.name} parsing has ended")
 
-    merged_df = pd.read_csv("telegram_data.csv")
+    merged_df = pd.read_csv("parsed_telegram_data.csv")
     merged_df = merged_df.sort_values(by='date').reset_index(drop=True)
-    merged_df.to_csv('telegram_data.csv', index = False)
+    merged_df.to_csv('parsed_telegram_data.csv', index = False)
     print("\nTelegram data parsing has ended")
 
 
