@@ -33,7 +33,7 @@ def find_avg_vectors(tg_df, main_df):
 def main():
     current_dir = Path(__file__).parent
     hour_vectors_data_path = 'hour_vectorised_telegram_data.csv'
-    main_vectors_data_path = current_dir.parent.parent / 'Data_Processing' / 'telegram_vectoriser' / 'vectorised_telegram_data.csv'
+    main_vectors_data_path = current_dir.parent.parent / 'Data_Processing' / 'telegram_processing' / 'vectorised_telegram_data.csv'
     df_tg = pd.read_csv(hour_vectors_data_path, delimiter=',')
     df = pd.read_csv(main_vectors_data_path, delimiter=",")
 
