@@ -150,6 +150,7 @@ def parse_channel(data_frame):
 
 def main():
     df = pd.read_csv('hour_telegram_data.csv')
+    df['date'] = pd.to_datetime(df['date'])
     print("\nTelegram data parsing began")
 
     if len(df) != 0:
