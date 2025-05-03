@@ -32,9 +32,8 @@ def find_avg_vectors(tg_df, main_df):
 
 def main():
     current_dir = Path(__file__).parent
-    hour_vectors_data_path = 'hour_vectorised_telegram_data.csv'
     main_vectors_data_path = current_dir.parent.parent / 'Data_Processing' / 'telegram_vectoriser' / 'vectorised_telegram_data.csv'
-    df_tg = pd.read_csv(hour_vectors_data_path, delimiter=',')
+    df_tg = pd.read_csv('hour_vectorised_telegram_data.csv', delimiter=',')
     df = pd.read_csv(main_vectors_data_path, delimiter=",")
 
     print("\nTelegram data preparation for merge began")
@@ -43,8 +42,9 @@ def main():
     avg_df_tg = find_avg_vectors(df_tg, df)
     print("Telegram data preparation for merge ended")
     avg_df_tg.to_csv("average_telegram_vectors.csv", index=False)
-    df = pd.concat([df, df_tg], ignore_index=True)
-    df.to_csv(main_vectors_data_path, index=False)
+    avg_df_tg.to_csv("average_telegram_vectors.csv", mode='a', index=False,
+                     header=not Path("average_telegram_vectors.csv").exists())
+    df_tg.to_csv(main_vectors_data_path, mode='a', index=False, header=False)
 
 
 if __name__ == '__main__':
