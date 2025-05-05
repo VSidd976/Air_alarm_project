@@ -6,7 +6,7 @@ from datetime import datetime
 
 def find_avg_vectors(tg_df, main_df):
     average_vector = []
-    current_time = datetime.now().replace(minute=0, second=0)
+    current_time = datetime.now().replace(minute=0, second=0, microsecond=0)
     time_window_start = current_time - pd.Timedelta(hours=1)
     time_window_end = current_time
 
@@ -24,7 +24,7 @@ def find_avg_vectors(tg_df, main_df):
     else:
         avg_vector = 0
 
-    average_vector.append({'datetime': current_time, 'telegram_vector': avg_vector})
+    average_vector.append({'datetime': current_time.strftime('%Y-%m-%d %H:%M:%S'), 'telegram_vector': avg_vector})
     df_avg_vector = pd.DataFrame(average_vector)
 
     return df_avg_vector
