@@ -40,8 +40,9 @@ Predictions are based on the analysis of:
 │   │   ├── hour_scraper.py
 │   │   └── hour_vectoriser.py
 │   ├── weather_forecast/                    # Weather forecast scripts
-│   │   ├── get_weather.py                   # Get forecasts for all cities
-│   │   └── daily_weather.py                 # Schedule daily weather updates
+│   │   ├── get_weather.py                   # old
+│   │   └── daily_weather.py                 # old
+│   │   └── daily_weather_forecast.py     
 
 ├── data_collection/                         # One-time or manual data scraping scripts
 │   ├── extra_data/                          # Additional static datasets
@@ -49,9 +50,6 @@ Predictions are based on the analysis of:
 │   │   ├── combined_df_ukr.csv
 │   │   ├── distances.csv
 │   │   └── distances.py
-│   ├── get_weather_forecast/
-│   │   ├── forecast_all_regions.py
-│   │   └── get_weather_for_city.py
 │   ├── isw_scraper/
 │   │   └── isw_scraper.py
 │   ├── telegram-scraper/
