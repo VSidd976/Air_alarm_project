@@ -303,27 +303,30 @@ To replicate the training and ensemble:
 
 Linear Regression: 
 ```bash
-models/linear_regression/Linear.ipynb
+jupyter notebook models/linear_regression/Linear.ipynb
 ```
 Logistic Regression (v1): 
 ```bash
-models/logistic_regression/Logistic_regression_DS.ipynb
+jupyter notebook models/logistic_regression/Logistic_regression_DS.ipynb
 ```
 Logistic Regression (v2): 
 ```bash
-models/logistic_regression/Logistic_regression_v2.ipynb
+jupyter notebook models/logistic_regression/Logistic_regression_v2.ipynb
 ```
 Stochastic Gradient Descent Classifier: 
 ```bash
-models/stochastic_gradient_descent_classifier/SGD_classifier.ipynb
+jupyter notebook models/stochastic_gradient_descent_classifier/SGD_classifier.ipynb
 ```
 Cat Boost Classifier: 
 ```bash
-models/cat_boost_model/cat_boost_classifier.ipynb
+jupyter notebook models/cat_boost_model/cat_boost_classifier.ipynb
 ```
 Random Forest Classifier: 
 ```bash
-models/random_forest_classifier/random_forest_classifier.ipynb
+jupyter notebook models/random_forest_classifier/random_forest_classifier.ipynb
 ```
 
-**5. Saas**
+**5. Flask-based web interface and SaaS**
+```bash
+python notebook saas/saas_app_v2.py
+```
