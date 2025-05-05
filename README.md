@@ -110,14 +110,16 @@ Predictions are based on the analysis of:
 - Visualization-ready notebooks
 
 ## How to run
-1. **Clone the repository:**
+**1. Clone the repository:**
    ```bash
    git clone https://github.com/yourusername/war-alert-system.git
-   cd war-alert-system```
+   cd war-alert-system
+   ```
 
-2. **Install dependencies:**
+**2. Install dependencies:**
 ```bash
-  pip install -r requirements.txt```
+  pip install -r requirements.txt
+```
 Contents of requirements.txt:
 ```argparse
 apscheduler
@@ -136,7 +138,7 @@ tqdm
 emoji
 spacy
 langdetect
-catboost```
+catboost
 ```
 
 **3. General and Daily Data Collections**  
@@ -152,22 +154,23 @@ You can retrieve historical data from the following sources by running the corre
    data_collection/get_isw_data.sh
 ```
 **Telegram Channels**
+*Original repo*: https://github.com/unnohwn/telegram-scraper
 ```bash  
    data_collection/get_telegram_data.sh  
 ```
 **Weather**
 
 **Additional Data**
-To improve prediction quality, we incorporated external public datasets:
+      To improve prediction quality, we incorporated external public datasets:
 
 **Risk Factors Based on Holidays and Memorial Dates in Ukraine**
-Run the notebook:
+      Run the notebook:
 
 ```bash
 jupyter notebook data_collection/extra_data/Holiday_Risk_Factor_Assigment.ipynb  
 ``` 
 **Distance Calculation Between Ukrainian Cities and Airfields**
-Run the script:
+      Run the script:
 ```bash
 python data_collection/extra_data/distances.py
 ```
@@ -212,15 +215,17 @@ jupyter notebook data_processing/merge/Data_merge.ipynb
 
 **3.1.4. Additional Tools**
 
-**Parse External Links from ISW Articles**  
+**Others:**
+**1. Parse External Links from ISW Articles**  
 To extract links to external sources (including Telegram channels) mentioned in ISW articles:  
 ```bash
 jupyter notebook data_processing/isw_processing/isw_link_parser.ipynb
 ```
 
-**Data Analysis Notebooks**  
+**2. Data Analysis Notebooks**  
 A variety of exploratory data analyses are available in the analysis/ directory. These help visualize dataset distributions, correlation, and quality before training.
 
+---
 **3.2. Daily Data Collection**  
 This mode fetches and processes real-time data for daily model predictions. Each dataset includes a download and preprocessing stage.
 
@@ -258,7 +263,7 @@ python daily_data_collection/daily_merge_process_final_dataset/preprocess_final_
 ```
 
 Sample daily CSV datasets are also included for demonstration and merging purposes.
-
+----
 **4. Train Models**  
 We experimented with five models:  
 - Linear Regression  
