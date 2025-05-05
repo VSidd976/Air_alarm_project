@@ -153,13 +153,13 @@ You can retrieve historical data from the following sources by running the corre
 
 **ISW Articles**  
 ```bash  
-   data_collection/get_isw_data.sh
+   bash data_collection/get_isw_data.sh
 ```
 **Telegram Channels**
      
  *Original repo*: https://github.com/unnohwn/telegram-scraper
 ```bash  
-   data_collection/get_telegram_data.sh  
+   bash data_collection/get_telegram_data.sh  
 ```
 
 **Additional Data**
