@@ -94,7 +94,10 @@ Predictions are based on the analysis of:
 │       └── ensemble_model.ipynb
 
 ├── saas/                                    # Software-as-a-Service application (deployment-ready)
-│   └── saas_app_v1.py
+│   ├── saas_app_v1.py                       # old version
+│   ├── saas_app_v2.py
+│   └── templates/
+│       └── index.html
 
 └── requirements.txt                         # Project dependencies
 ```
@@ -158,7 +161,6 @@ You can retrieve historical data from the following sources by running the corre
 ```bash  
    data_collection/get_telegram_data.sh  
 ```
-**Weather**
 
 **Additional Data**
    
@@ -259,8 +261,11 @@ Preprocessing:
 bash daily_data_collection/get_hour_telegram_data/clear_daily_telegram_data.sh
 ```
 
-**3.2.3. Weather 😭**  
-(Currently not implemented)
+**3.2.3. Weather**  
+Download:  
+```bash
+python daily_data_collection/weather_forecast/daily_weather_forecast.py
+``` 
 
 **3.2.4. Final Dataset Merge & Preprocessing**  
 Merge all daily datasets:  
