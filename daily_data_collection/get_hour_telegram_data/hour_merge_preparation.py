@@ -6,7 +6,7 @@ from datetime import datetime
 
 def find_avg_vectors(tg_df, main_df):
     average_vector = []
-    current_time = datetime.now().replace(minute=0, second=0, microsecond=0)
+    current_time = datetime.now().replace(minute=0, second=0)
     time_window_start = current_time - pd.Timedelta(hours=1)
     time_window_end = current_time
 
@@ -38,6 +38,7 @@ def main():
 
     print("\nTelegram data preparation for merge began")
     df['date'] = pd.to_datetime(df['date'])
+    df_tg['date'] = pd.to_datetime(df['date'])
     df_tg['text_vector'] = df_tg['text_vector'].astype(np.float64)
     avg_df_tg = find_avg_vectors(df_tg, df)
     print("Telegram data preparation for merge ended")

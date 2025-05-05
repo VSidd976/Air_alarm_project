@@ -18,6 +18,7 @@ def find_avg_vectors(tg_df, target_df):
             vectors = np.stack(top_100_messages['text_vector'].tolist())
 
             avg_vector = np.mean(vectors, axis=0)
+
         else:
             avg_vector = 0
 
