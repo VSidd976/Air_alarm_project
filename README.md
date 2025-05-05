@@ -69,6 +69,7 @@ Predictions are based on the analysis of:
 │   │   ├── isw_data_cleaning_without_stopwords.ipynb
 │   │   └── isw_link_parser.ipynb
 │   ├── merge/
+│   │   ├── merging_extra_data.ipynb
 │   │   └── Data_merge.ipynb
 │   ├── telegram_processing/
 │   │   ├── merge_preparation.py
@@ -154,15 +155,16 @@ You can retrieve historical data from the following sources by running the corre
    data_collection/get_isw_data.sh
 ```
 **Telegram Channels**
-      *Original repo*: https://github.com/unnohwn/telegram-scraper
+     
+ *Original repo*: https://github.com/unnohwn/telegram-scraper
 ```bash  
    data_collection/get_telegram_data.sh  
 ```
 **Weather**
 
 **Additional Data**
-      
-      To improve prediction quality, we incorporated external public datasets:
+   
+To improve prediction quality, we incorporated external public datasets:
 
 **Risk Factors Based on Holidays and Memorial Dates in Ukraine**
       Run the notebook:
