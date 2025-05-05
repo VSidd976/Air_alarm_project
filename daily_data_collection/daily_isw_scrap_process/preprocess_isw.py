@@ -89,7 +89,7 @@ def process_data():
     df['Bold Text'] = df['Bold Text'].apply(clean_and_stem)
     
     tfidf_df = pd.read_pickle('tfidf_df.pkl')
-    vectorizer = TfidfVectorizer(max_features=1000)
+    vectorizer = TfidfVectorizer(ngram_range=(2, 2), max_features=1000)
     vectorizer.fit(df['Bold Text'])
     X_tfidf = vectorizer.transform(df['Bold Text'])
     article_vectors = X_tfidf.mean(axis=1)
