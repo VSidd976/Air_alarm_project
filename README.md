@@ -11,6 +11,7 @@ Predictions are based on the analysis of:
 •	Additional open sources (Telegram, national holidays, distances to military airfields)
 
 ## System Architecture
+```
 ├── analysis/                                # Analysis notebooks (except Telegram data)
 │   ├── alarm_data_analysis.ipynb
 │   ├── alarms+weather+isw_analysis.ipynb
@@ -97,7 +98,7 @@ Predictions are based on the analysis of:
 │   └── saas_app_v1.py
 
 └── requirements.txt                         # Project dependencies
-
+```
 
 ## Features
 - Daily scraping of ISW reports and Telegram data
