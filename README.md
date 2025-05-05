@@ -94,7 +94,10 @@ Predictions are based on the analysis of:
 │       └── ensemble_model.ipynb
 
 ├── saas/                                    # Software-as-a-Service application (deployment-ready)
-│   └── saas_app_v1.py
+│   ├── saas_app_v1.py                       # old version
+│   ├── saas_app_v2.py
+│   └── templates/
+│       └── index.html
 
 └── requirements.txt                         # Project dependencies
 ```
@@ -150,15 +153,14 @@ You can retrieve historical data from the following sources by running the corre
 
 **ISW Articles**  
 ```bash  
-   data_collection/get_isw_data.sh
+   bash data_collection/get_isw_data.sh
 ```
 **Telegram Channels**
      
  *Original repo*: https://github.com/unnohwn/telegram-scraper
 ```bash  
-   data_collection/get_telegram_data.sh  
+   bash data_collection/get_telegram_data.sh  
 ```
-**Weather**
 
 **Additional Data**
    
@@ -259,8 +261,11 @@ Preprocessing:
 bash daily_data_collection/get_hour_telegram_data/clear_daily_telegram_data.sh
 ```
 
-**3.2.3. Weather 😭**  
-(Currently not implemented)
+**3.2.3. Weather**  
+Download:  
+```bash
+python daily_data_collection/weather_forecast/daily_weather_forecast.py
+``` 
 
 **3.2.4. Final Dataset Merge & Preprocessing**  
 Merge all daily datasets:  
@@ -298,27 +303,30 @@ To replicate the training and ensemble:
 
 Linear Regression: 
 ```bash
-models/linear_regression/Linear.ipynb
+jupyter notebook models/linear_regression/Linear.ipynb
 ```
 Logistic Regression (v1): 
 ```bash
-models/logistic_regression/Logistic_regression_DS.ipynb
+jupyter notebook models/logistic_regression/Logistic_regression_DS.ipynb
 ```
 Logistic Regression (v2): 
 ```bash
-models/logistic_regression/Logistic_regression_v2.ipynb
+jupyter notebook models/logistic_regression/Logistic_regression_v2.ipynb
 ```
 Stochastic Gradient Descent Classifier: 
 ```bash
-models/stochastic_gradient_descent_classifier/SGD_classifier.ipynb
+jupyter notebook models/stochastic_gradient_descent_classifier/SGD_classifier.ipynb
 ```
 Cat Boost Classifier: 
 ```bash
-models/cat_boost_model/cat_boost_classifier.ipynb
+jupyter notebook models/cat_boost_model/cat_boost_classifier.ipynb
 ```
 Random Forest Classifier: 
 ```bash
-models/random_forest_classifier/random_forest_classifier.ipynb
+jupyter notebook models/random_forest_classifier/random_forest_classifier.ipynb
 ```
 
-**5. Saas**
+**5. Flask-based web interface and SaaS**
+```bash
+python notebook saas/saas_app_v2.py
+```
