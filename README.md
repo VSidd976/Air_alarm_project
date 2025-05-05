@@ -140,7 +140,7 @@ spacy
 langdetect
 catboost
 ```
-
+---
 **3. General and Daily Data Collections**  
 Depending on your objectives, you can choose between two data collection modes: General Data Collection or Daily Data Collection. Both include steps for downloading, preprocessing, and merging data into a unified dataset.  
 For model training, we used General Data Collection, while Daily Data Collection was used primarily for testing and integration with the SaaS interface to simulate real-time predictions.  
@@ -154,13 +154,14 @@ You can retrieve historical data from the following sources by running the corre
    data_collection/get_isw_data.sh
 ```
 **Telegram Channels**
-*Original repo*: https://github.com/unnohwn/telegram-scraper
+      *Original repo*: https://github.com/unnohwn/telegram-scraper
 ```bash  
    data_collection/get_telegram_data.sh  
 ```
 **Weather**
 
 **Additional Data**
+      
       To improve prediction quality, we incorporated external public datasets:
 
 **Risk Factors Based on Holidays and Memorial Dates in Ukraine**
@@ -195,6 +196,10 @@ Vectorization (TF-IDF):
 ```bash
 python data_processing/telegram_processing/telegram_vectoriser.py
 ```
+Merging:
+```bash
+python data_processing/telegram_processing/merge_preparation.py
+```
 
 **Weather**  
 ```bash
@@ -211,6 +216,11 @@ jupyter notebook data_processing/alarm_parser/alarm_data_cleaning.ipynb
 Merge all cleaned datasets into a final training set:  
 ```bash
 jupyter notebook data_processing/merge/Data_merge.ipynb
+```
+
+Run the notebook to process and analyze weather data as well as holiday data in Ukraine. It loads data from CSV files, processes dates, calculates risks associated with holidays, and saves the results in a new CSV file that contains information about weather conditions and holidays for various cities:
+```bash
+jupyter notebook data_processing/merge/merging_extra_data.ipynb
 ```
 
 **3.1.4. Additional Tools**
@@ -261,9 +271,10 @@ Preprocess the merged dataset:
 ```bash
 python daily_data_collection/daily_merge_process_final_dataset/preprocess_final_dataset.py
 ```
-
 Sample daily CSV datasets are also included for demonstration and merging purposes.
-----
+
+--- 
+
 **4. Train Models**  
 We experimented with five models:  
 - Linear Regression  
@@ -276,8 +287,8 @@ The final deployed ensemble combines the best two models:
 **CatBoost Classifier and Random Forest Classifier**
 
 To replicate the training and ensemble:  
-Train both base models on the same dataset.  
-Use an unseen dataset for objective ensemble evaluation.
+1. Train both base models on the same dataset.  
+2. Use an unseen dataset for objective ensemble evaluation.
 
 ```bash
  jupyter notebook models/ensemble_model/models_for_ensemble.ipynb  
