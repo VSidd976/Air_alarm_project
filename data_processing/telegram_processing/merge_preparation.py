@@ -19,7 +19,7 @@ def find_avg_vectors(tg_df, target_df):
 
             avg_vector = np.mean(vectors, axis=0)
         else:
-            avg_vector = np.nan
+            avg_vector = 0
 
         average_vectors.append({'datetime': datetime, 'telegram_vector': avg_vector})
 
