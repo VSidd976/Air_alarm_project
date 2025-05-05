@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ukrainian Alarm Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            padding: 20px;
+        }
+        label {
+            margin-right: 10px;
+        }
+        select, input, button {
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+        #result-container {
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Ukrainian Alarm Prediction</h2>
+
+    <div class="form-group">
+        <label for="city">Select City:</label>
+        <select id="city" name="city"></select>
+    </div>
+
+    <div class="form-group">
+        <label for="date">Select Date:</label>
+        <input type="date" id="date" name="date">
+        <label for="time">Select Time:</label>
+        <input type="time" id="time" name="time">
+    </div>
+
+    <div class="form-group">
+        <label for="prediction-type">Choose Prediction Type:</label>
+        <select id="prediction-type">
+            <option value="single">Single Alarm Prediction</option>
+            <option value="24hour">24-Hour Forecast</option>
+            <option value="daily">Full Day Prediction</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <button id="predict">Get Prediction</button>
+    </div>
+
+    <div id="result-container">
+        <h3>Result:</h3>
+        <pre id="result">No request made yet.</pre>
+    </div>
+
+    <script>
+        const UKRAINIAN_CITIES = [
+            "Kyiv", "Lviv", "Odesa", "Dnipro", "Kharkiv", "Zaporizhzhia",
+            "Ivano-Frankivsk", "Ternopil", "Chernihiv", "Cherkasy", "Zhytomyr",
+            "Poltava", "Lutsk", "Sumy", "Donetsk", "Luhansk", "Mykolaiv",
+            "Kherson", "Chernivtsi", "Kropyvnytskyi", "Khmelnytskyi", "Vinnytsia",
+            "Rivne", "Uzhhorod", "Simferopol"
+        ];
+
+        const citySelect = document.getElementById('city');
+        UKRAINIAN_CITIES.forEach(city => {
+            const option = document.createElement('option');
+            option.value = city;
+            option.textContent = city;
+            citySelect.appendChild(option);
+        });
+
+        document.getElementById('predict').addEventListener('click', async () => {
+            const city = document.getElementById('city').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const type = document.getElementById('prediction-type').value;
+            const datetime = `${date} ${time}:00`;
+
+            const endpoint = {
+                'single': '/get_alarm',
+                '24hour': '/24hour',
+                'daily': '/day_predict'
+            }[type];
+
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ city_address: city, datetime })
+                });
+
+                const result = await res.json();
+                document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('result').textContent = `Error: ${error}`;
+            }
+        });
+    </script>
+</body>
+</html>
