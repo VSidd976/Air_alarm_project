@@ -5,7 +5,7 @@ from joblib import dump
 
 def tg_vectoriser(tg_df):
     print("\nTelegram data vectorising began")
-    vectorizer = TfidfVectorizer(max_features=1000)
+    vectorizer = TfidfVectorizer(ngram_range=(2, 2), max_features=1000)
     dump(vectorizer, "telegram_tfidf.pkl")
 
     X_tfidf = vectorizer.fit_transform(tg_df['message'])
