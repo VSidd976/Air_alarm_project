@@ -1,77 +1,59 @@
 import pandas as pd
 import numpy as np
-import sklearn
 import re
-from sklearn.feature_extraction.text import TfidfVectorizer
+import pickle
 import csv
 import schedule
 import time
 from datetime import datetime
+from sklearn.feature_extraction.text import TfidfVectorizer
 
-def clean_text(text, n=600):
+
+custom_stopwords = {
+    'the', 'and', 'for', 'that', 'with', 'this', 'from', 'you', 'your', 'are', 'but', 'not', 'all', 'any', 'can',
+    'have', 'has', 'had', 'was', 'were', 'will', 'would', 'should', 'could', 'about', 'they', 'them', 'their',
+    'then', 'there', 'what', 'when', 'which', 'who', 'whom', 'where', 'why', 'how', 'into', 'out', 'our', 'his',
+    'her', 'its', 'also', 'more', 'most', 'some', 'such', 'no', 'nor', 'only', 'own', 'same', 'so', 'than', 'too',
+    'very', 'just', 'on', 'in', 'at', 'by', 'an', 'be', 'is', 'it', 'of', 'to', 'as', 'a', 'or', 'if', 'we', 'he',
+    'she', 'do', 'does', 'did'
+}
+
+
+def simple_stem(word):
+    suffixes = ['ing', 'ly', 'ed', 'ious', 'ies', 'ive', 'es', 's', 'ment']
+    for suffix in suffixes:
+        if word.endswith(suffix) and len(word) > len(suffix) + 2:
+            return word[:-len(suffix)]
+    return word
+
+
+def full_clean_text(text):
     if pd.isnull(text):
         return ''
     text = re.sub(r'<.*?>', '', text)
-    text = re.sub(r'isw.?s interactive map of.*?static maps present in this report', '', text, flags=re.IGNORECASE)
+    text = re.sub(r'isw.?s interactive map of the russian invasion of ukraine.*?static maps present in this report', '', text, flags=re.IGNORECASE)
     text = re.sub(r'Click.*?(?=[A-Z]|$)', '', text, flags=re.DOTALL)
-    text = re.sub(r'\d{1,2}[:\d]*\s*(am|pm|et)?', '', text, flags=re.IGNORECASE)
+    text = re.sub(r'^.*?\b(am|pm)\b\s*(et)?', '', text, flags=re.IGNORECASE)
     text = re.sub(r'http[s]?://\S+', '', text)
     text = re.sub(r'[^\w\s]', '', text)
-    text = re.sub(r'\s+', ' ', text).strip()
-    text = text[n:].strip()
-    return text.lower()
+    text = re.sub(r'\d+', '', text)  # видалення чисел
+    text = re.sub(r'\s+', ' ', text).strip().lower()
+    return text
 
-class SimpleStemmer:
-    def __init__(self):
-        self.rules = [
-            (r'(ed|ing)$', ''),
-            (r'(es|s)$', ''),
-            (r'ies$', 'y'),
-            (r'(ive|ize|ation|al|ful|less|ness)$', ''),
-            (r'(er|ic|ous|able|ible)$', ''),
-            (r'(ment|ant|ent)$', ''),
-            (r'(ly)$', ''),
-            (r'($)', '')
-        ]
-    
-    def stem(self, word):
-        for rule, replacement in self.rules:
-            if re.search(rule, word):
-                word = re.sub(rule, replacement, word)
-        return word.lower()
 
 def clean_and_stem(text):
-    stop_words = set([
-        'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves',
-        'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their',
-        'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was',
-        'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and',
-        'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between',
-        'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on',
-        'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all',
-        'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same',
-        'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now', 'd', 'll', 'm', 'o', 're', 've',
-        'y', 'ain', 'aren', 'couldn', 'didn', 'doesn', 'hadn', 'hasn', 'haven', 'isn', 'ma', 'mightn', 'mustn', 'needn', 'shan',
-        'shouldn', 'wasn', 'weren', 'won', 'wouldn'
-    ])
+    words = text.split()
+    filtered = [simple_stem(word) for word in words if word not in custom_stopwords and word.isalpha()]
+    return ' '.join(filtered)
 
-    words = re.findall(r'\b\w+\b', text)
-    stemmer = SimpleStemmer()
-    filtered_words = [
-        stemmer.stem(word)
-        for word in words
-        if word.lower() not in stop_words and word.isalpha()
-    ]
-    
-    return ' '.join(filtered_words)
 
 def process_data():
     input_file = "isw_data.txt"
-    output_file = "isw_data.csv"
-    
+    output_file = "processed_isw.csv"
+
     with open(input_file, "r", encoding="utf-8") as f:
         text = f.read()
-    
+
     date_match = re.search(r'([A-Za-z]+ \d{1,2}, \d{4})', text)
     if date_match:
         date_str = date_match.group(1)
@@ -80,31 +62,31 @@ def process_data():
     else:
         formatted_date = ""
 
+    cleaned_text = clean_and_stem(full_clean_text(text))
+
     with open(output_file, "w", newline='', encoding="utf-8") as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=["date", "Bold Text"])
+        writer = csv.DictWriter(csvfile, fieldnames=["date", "processed_text"])
         writer.writeheader()
-        writer.writerow({"date": formatted_date, "Bold Text": text.strip()})
-    
+        writer.writerow({"date": formatted_date, "processed_text": cleaned_text})
+
     df = pd.read_csv(output_file)
-    df['Bold Text'] = df['Bold Text'].apply(clean_and_stem)
-    
-    tfidf_df = pd.read_pickle('tfidf_df.pkl')
-    vectorizer = TfidfVectorizer(max_features=1000)
-    vectorizer.fit(df['Bold Text'])
-    X_tfidf = vectorizer.transform(df['Bold Text'])
-    article_vectors = X_tfidf.mean(axis=1)
-    
-    df['article_vector'] = article_vectors
-    
-    df_isw = df.drop(columns=["Bold Text"])
-    
-    df_isw.to_csv(output_file, index=False)
-    print("Data processed and saved successfully.")
+
+    with open('tfidf_vectorizer.pkl', 'rb') as f:
+        vectorizer = pickle.load(f)
+
+    X_tfidf = vectorizer.transform(df['processed_text'])
+    article_vector_means = X_tfidf.sum(axis=1) / (X_tfidf != 0).sum(axis=1)
+    article_vector_means = np.squeeze(np.asarray(np.nan_to_num(article_vector_means)))
+
+    df['article_vector'] = article_vector_means
+    df_out = df.drop(columns=['processed_text'])
+    df_out.to_csv(output_file, index=False)
+
+    print(f"Processed and saved: {output_file}")
 
 SCHEDULED_HOUR = 23
 SCHEDULED_MINUTE = 44
-
-schedule.every().day.at(f"{SCHEDULED_HOUR}:{SCHEDULED_MINUTE}").do(process_data)
+schedule.every().day.at(f"{SCHEDULED_HOUR:02d}:{SCHEDULED_MINUTE:02d}").do(process_data)
 
 while True:
     schedule.run_pending()

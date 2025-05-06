@@ -18,8 +18,9 @@ def find_avg_vectors(tg_df, target_df):
             vectors = np.stack(top_100_messages['text_vector'].tolist())
 
             avg_vector = np.mean(vectors, axis=0)
+
         else:
-            avg_vector = np.nan
+            avg_vector = 0
 
         average_vectors.append({'datetime': datetime, 'telegram_vector': avg_vector})
 
@@ -36,7 +37,6 @@ def main():
     print("\nTelegram data preparation for merge began")
     df['datetime'] = pd.to_datetime(df['datetime'])
     df_tg['date'] = pd.to_datetime(df_tg['date'])
-    df_tg['text_vector'] = df_tg['text_vector'].astype(np.float64)
     avg_df_tg = find_avg_vectors(df_tg, df)
     print("Telegram data preparation for merge ended")
     avg_df_tg.to_csv("average_telegram_vectors.csv", index=False)

@@ -10,9 +10,9 @@ def find_avg_vectors(tg_df, main_df):
     time_window_start = current_time - pd.Timedelta(hours=1)
     time_window_end = current_time
 
-    main_df = pd.concat([main_df, tg_df], ignore_index=True)
+    df = pd.concat([main_df, tg_df], axis=0, ignore_index=True)
 
-    filtered_messages = main_df[(main_df['date'] >= time_window_start) & (main_df['date'] < time_window_end)]
+    filtered_messages = df[(df['date'] >= time_window_start) & (df['date'] < time_window_end)]
 
     if len(filtered_messages) > 0:
         filtered_messages = filtered_messages.sort_values(by='date', ascending=False)
@@ -24,7 +24,7 @@ def find_avg_vectors(tg_df, main_df):
     else:
         avg_vector = 0
 
-    average_vector.append({'datetime': current_time, 'telegram_vector': avg_vector})
+    average_vector.append({'datetime': current_time.strftime('%Y-%m-%d %H:%M:%S'), 'telegram_vector': avg_vector})
     df_avg_vector = pd.DataFrame(average_vector)
 
     return df_avg_vector
@@ -38,7 +38,7 @@ def main():
 
     print("\nTelegram data preparation for merge began")
     df['date'] = pd.to_datetime(df['date'])
-    df_tg['text_vector'] = df_tg['text_vector'].astype(np.float64)
+    df_tg['date'] = pd.to_datetime(df_tg['date'])
     avg_df_tg = find_avg_vectors(df_tg, df)
     print("Telegram data preparation for merge ended")
     avg_df_tg.to_csv("average_telegram_vectors.csv", index=False)
